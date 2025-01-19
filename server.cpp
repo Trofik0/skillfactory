@@ -64,7 +64,7 @@ void ChatServer::handle_client(tcp::socket socket) {
             std::string password = credentials.substr(delimiter + 1);
             if (!database_.authenticate_user(username, password)) {
                 boost::asio::write(socket, boost::asio::buffer("Login failed: Invalid username or password."));
-                return; // Неверные учетные данные
+                return; 
             }
         }
 
