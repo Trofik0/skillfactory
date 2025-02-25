@@ -1,0 +1,15 @@
+#include <QApplication>
+#include "client_gui.h"
+#include "server_gui.h"
+
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+
+    ClientGUI clientWindow;
+    clientWindow.show();
+
+    ServerGUI serverWindow;
+    serverWindow.show();
+
+    return app.exec();
+}
