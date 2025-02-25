@@ -25,3 +25,6 @@ private:
     void displayMessages(const QStringList &messages);
     void displayUsers(const QStringList &users);
 };
+
+#endif // CLIENT_GUI_H
+
