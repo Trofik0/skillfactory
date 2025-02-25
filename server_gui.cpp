@@ -1,74 +1,52 @@
-#include "server_gui.h"
+#include "client_gui.h"
+#include <QApplication>
+#include <QTextEdit>
 
-ServerGUI::ServerGUI(QWidget *parent) : QMainWindow(parent) {
-    setWindowTitle("Server Control Panel");
-    resize(800, 600);
-
+ClientGUI::ClientGUI(QWidget *parent) : QMainWindow(parent) {
+    setWindowTitle("Client Application");
+    resize(400, 300);
+    
     QWidget *centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
-messagesView = new QTableView(this);
-    usersView = new QTableView(this);
-    banButton = new QPushButton("Ban User", this);
-    disconnectButton = new QPushButton("Disconnect User", this);
- 
+
+    fetchMessagesButton = new QPushButton("Fetch Messages", this);
+    fetchUsersButton = new QPushButton("Fetch Users", this);
+
     QVBoxLayout *layout = new QVBoxLayout(centralWidget);
-    layout->addWidget(messagesView);
-    layout->addWidget(usersView);
+    layout->addWidget(fetchMessagesButton);
+    layout->addWidget(fetchUsersButton);
 
-    QHBoxLayout *buttonLayout = new QHBoxLayout();
-    buttonLayout->addWidget(banButton);
-    buttonLayout->addWidget(disconnectButton);
-    layout->addLayout(buttonLayout);
+    connect(fetchMessagesButton, &QPushButton::clicked, this, &ClientGUI::fetchMessages);
+    connect(fetchUsersButton, &QPushButton::clicked, this, &ClientGUI::fetchUsers);
 
-    // Инициализация моделей
-    messagesModel = new QStandardItemModel(this);
-    usersModel = new QStandardItemModel(this);
-    messagesView->setModel(messagesModel);
-    usersView->setModel(usersModel);
-
-    connect(banButton, &QPushButton::clicked, this, &ServerGUI::banUser);
-    connect(disconnectButton, &QPushButton::clicked, this, &ServerGUI::disconnectUser);
-
-    if (db.connectToDatabase("localhost", "yourdbname", "username", "password")) {
-        loadMessages();
-        loadUsers();
-    } else {
+    // Инициализируем соединение с базой
+    if (!db.connectToDatabase("localhost", "yourdbname", "username", "password")) {
         QMessageBox::critical(this, "Connection Failed", "Could not connect to the database.");
     }
 }
 
-void ServerGUI::loadMessages() {
-    messagesModel->clear();
+void ClientGUI::fetchMessages() {
     QStringList messages = db.getMessages();
-    for (const QString &message : messages) {
-        messagesModel->appendRow(new QStandardItem(message));
-    }
+    displayMessages(messages);
 }
 
-void ServerGUI::loadUsers() {
-    usersModel->clear();
+void ClientGUI::fetchUsers() {
     QStringList users = db.getUsers();
-    for (const QString &user : users) {
-        usersModel->appendRow(new QStandardItem(user));
-    }
+    displayUsers(users);
 }
 
-void ServerGUI::banUser() {
-    bool ok;
-    int userId = QInputDialog::getInt(this, "Ban User", "Enter User ID to ban:", 0, 0, 1000, 1, &ok);
-    if (ok) {
-        db.banUser(userId);
-        QMessageBox::information(this, "Success", "User has been banned.");
-        loadUsers(); // Обновляем список пользователей
-    }
+void ClientGUI::displayMessages(const QStringList &messages) {
+    QTextEdit *textEdit = new QTextEdit(this);
+    textEdit->setReadOnly(true);
+    textEdit->setPlainText(messages.join("\n"));
+    textEdit->setWindowTitle("Messages");
+    textEdit->show();
 }
 
-void ServerGUI::disconnectUser() {
-    bool ok;
-    int userId = QInputDialog::getInt(this, "Disconnect User", "Enter User ID to disconnect:", 0, 0, 1000, 1, &ok);
-    if (ok) {
-        db.disconnectUser(userId);
-        QMessageBox::information(this, "Success", "User has been disconnected.");
-        loadUsers(); // Обновляем список пользователей
-    }
+void ClientGUI::displayUsers(const QStringList &users) {
+    QTextEdit *textEdit = new QTextEdit(this);
+    textEdit->setReadOnly(true);
+    textEdit->setPlainText(users.join("\n"));
+    textEdit->setWindowTitle("Users");
+    textEdit->show();
 }
