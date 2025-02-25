@@ -1,36 +1,27 @@
-#ifndef SERVER_GUI_H
-#define SERVER_GUI_H
+#ifndef CLIENT_GUI_H
+#define CLIENT_GUI_H
 
 #include <QMainWindow>
-#include <QTableView>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QMessageBox>
-#include <QInputDialog>
-#include <QStandardItemModel>
+#include <QString>
 #include "database.h"
 
-class ServerGUI : public QMainWindow {
+class ClientGUI : public QMainWindow {
     Q_OBJECT
 
 public:
-    ServerGUI(QWidget *parent = nullptr);
-    void loadMessages();
-    void loadUsers();
-
+    ClientGUI(QWidget *parent = nullptr);
+    
 private slots:
-    void banUser();
-    void disconnectUser();
+    void fetchMessages();
+    void fetchUsers();
 
 private:
-    QTableView *messagesView;
-    QTableView *usersView;
     Database db;
-    QStandardItemModel *messagesModel;
-    QStandardItemModel *usersModel;
-    QPushButton *banButton;
-    QPushButton *disconnectButton;
+    QPushButton *fetchMessagesButton;
+    QPushButton *fetchUsersButton;
+    void displayMessages(const QStringList &messages);
+    void displayUsers(const QStringList &users);
 };
-
-#endif // SERVER_GUI_H
