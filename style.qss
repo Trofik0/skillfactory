@@ -28,3 +28,8 @@ QHeaderView::section {
     padding: 4px;
     font-weight: bold;
 }
+
+QTextEdit {
+    background-color: #fff;
+    border: 1px solid #cdcdcd;
+}
