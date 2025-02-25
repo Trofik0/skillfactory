@@ -1,0 +1,30 @@
+QMainWindow {
+    background-color: #f0f0f0;
+}
+
+QTableView {
+    background-color: #ffffff;
+    border: 1px solid #cdcdcd;
+    padding: 5px;
+}
+
+QPushButton {
+    background-color: #0078d7;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+QPushButton:hover {
+    background-color: #0056a1;
+}
+
+QPushButton:pressed {
+    background-color: #0084d1;
+}
+
+QHeaderView::section {
+    background-color: #e0e0e0;
+    padding: 4px;
+    font-weight: bold;
+}
